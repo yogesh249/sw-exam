@@ -1,3 +1,8 @@
+/**
+ * Adds a property to the properties array.
+ * @param {Object} property - The property object to add.
+ * @throws Will throw an error if the property ID is not unique or if required fields are missing.
+ */
 function addProperty(property) {
   if (this.properties.some((p) => p.propertyID === property.propertyID)) {
     throw new Error("Property ID must be unique");
@@ -18,6 +23,11 @@ function addProperty(property) {
   this.properties.push(property);
 }
 
+/**
+ * Reads a property by its ID.
+ * @param {string} propertyID - The ID of the property to read.
+ * @returns {Object|string} The property object if found, otherwise "Property not found".
+ */
 function readProperty(propertyID) {
   return (
     this.properties.find((property) => property.propertyID === propertyID) ||
@@ -25,6 +35,12 @@ function readProperty(propertyID) {
   );
 }
 
+/**
+ * Updates a property by its ID.
+ * @param {string} propertyID - The ID of the property to update.
+ * @param {Object} updatedDetails - The updated details of the property.
+ * @returns {string|undefined} "Property not found" if the property does not exist, otherwise undefined.
+ */
 function updateProperty(propertyID, updatedDetails) {
   const propertyIndex = this.properties.findIndex(
     (p) => p.propertyID === propertyID
@@ -38,6 +54,11 @@ function updateProperty(propertyID, updatedDetails) {
   };
 }
 
+/**
+ * Deletes a property by its ID.
+ * @param {string} propertyID - The ID of the property to delete.
+ * @returns {string|undefined} "Property not found" if the property does not exist, otherwise undefined.
+ */
 function deleteProperty(propertyID) {
   const propertyIndex = this.properties.findIndex(
     (p) => p.propertyID === propertyID
