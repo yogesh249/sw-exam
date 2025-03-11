@@ -1,126 +1,130 @@
-// import PropertyManagement from './PropertyManagement.lib';
-
-import { PropertyManagement } from "./PropertyManagement.lib";
+const {
+  addProperty,
+  readProperty,
+  updateProperty,
+  deleteProperty,
+} = require('./PropertyManagement.lib.js');
 
 describe('PropertyManagement', () => {
-  let propertyManagement;
+  let properties;
 
   beforeEach(() => {
-    propertyManagement = new PropertyManagement();
+    properties = [];
   });
 
-  test('should add a property successfully', () => {
+  test('should add a property', () => {
     const property = {
       propertyID: '1',
-      title: 'Test Property',
-      description: 'A beautiful property',
-      owner: 'John Doe',
-      location: '123 Main St',
-      price: 100000,
-      status: 'available',
-      dateListed: '2023-01-01',
-      images: ['image1.jpg']
+      title: 'Property1',
+      description: 'Description1',
+      owner: 'Owner1',
+      location: 'Location1',
+      price: 1000,
+      status: 'Available',
+      dateListed: '2025-03-11',
+      images: ['image1.jpg'],
     };
-    propertyManagement.addProperty(property);
-    expect(propertyManagement.properties.length).toBe(1);
-    expect(propertyManagement.properties[0]).toEqual(property);
+    addProperty.call({ properties }, property);
+    expect(properties).toContain(property);
   });
 
-  test('should throw an error if property ID is not unique', () => {
+  test('should throw error when adding property with duplicate ID', () => {
     const property = {
       propertyID: '1',
-      title: 'Test Property',
-      description: 'A beautiful property',
-      owner: 'John Doe',
-      location: '123 Main St',
-      price: 100000,
-      status: 'available',
-      dateListed: '2023-01-01',
-      images: ['image1.jpg']
+      title: 'Property1',
+      description: 'Description1',
+      owner: 'Owner1',
+      location: 'Location1',
+      price: 1000,
+      status: 'Available',
+      dateListed: '2025-03-11',
+      images: ['image1.jpg'],
     };
-    propertyManagement.addProperty(property);
-    expect(() => propertyManagement.addProperty(property)).toThrow('Property ID must be unique');
+    addProperty.call({ properties }, property);
+    expect(() => addProperty.call({ properties }, property)).toThrow(
+      'Property ID must be unique'
+    );
   });
 
-  test('should throw an error if required fields are missing', () => {
+  test('should throw error when adding property with missing fields', () => {
     const property = {
       propertyID: '1',
-      title: 'Test Property',
-      description: 'A beautiful property',
-      owner: 'John Doe',
-      location: '123 Main St',
-      price: 100000,
-      status: 'available',
-      dateListed: '2023-01-01'
-      // Missing images field
+      title: 'Property1',
+      description: 'Description1',
+      owner: 'Owner1',
+      location: 'Location1',
+      price: 1000,
+      status: 'Available',
+      dateListed: '2025-03-11',
     };
-    expect(() => propertyManagement.addProperty(property)).toThrow('Missing required fields');
+    expect(() => addProperty.call({ properties }, property)).toThrow(
+      'Missing required fields'
+    );
   });
 
-  test('should read a property successfully', () => {
+  test('should read a property by ID', () => {
     const property = {
       propertyID: '1',
-      title: 'Test Property',
-      description: 'A beautiful property',
-      owner: 'John Doe',
-      location: '123 Main St',
-      price: 100000,
-      status: 'available',
-      dateListed: '2023-01-01',
-      images: ['image1.jpg']
+      title: 'Property1',
+      description: 'Description1',
+      owner: 'Owner1',
+      location: 'Location1',
+      price: 1000,
+      status: 'Available',
+      dateListed: '2025-03-11',
+      images: ['image1.jpg'],
     };
-    propertyManagement.addProperty(property);
-    const readProperty = propertyManagement.readProperty('1');
-    expect(readProperty).toEqual(property);
+    addProperty.call({ properties }, property);
+    expect(readProperty.call({ properties }, '1')).toBe(property);
   });
 
-  test('should return "Property not found" if property does not exist', () => {
-    const result = propertyManagement.readProperty('999');
-    expect(result).toBe('Property not found');
+  test('should return "Property not found" for non-existent property ID', () => {
+    expect(readProperty.call({ properties }, '999')).toBe('Property not found');
   });
 
-  test('should update a property successfully', () => {
+  test('should update a property by ID', () => {
     const property = {
       propertyID: '1',
-      title: 'Test Property',
-      description: 'A beautiful property',
-      owner: 'John Doe',
-      location: '123 Main St',
-      price: 100000,
-      status: 'available',
-      dateListed: '2023-01-01',
-      images: ['image1.jpg']
+      title: 'Property1',
+      description: 'Description1',
+      owner: 'Owner1',
+      location: 'Location1',
+      price: 1000,
+      status: 'Available',
+      dateListed: '2025-03-11',
+      images: ['image1.jpg'],
     };
-    propertyManagement.addProperty(property);
-    const updatedDetails = { title: 'Updated Property' };
-    propertyManagement.updateProperty('1', updatedDetails);
-    expect(propertyManagement.properties[0].title).toBe('Updated Property');
+    addProperty.call({ properties }, property);
+    const updatedDetails = { price: 2000 };
+    updateProperty.call({ properties }, '1', updatedDetails);
+    expect(properties[0].price).toBe(2000);
   });
 
-  test('should return "Property not found" if trying to update a non-existent property', () => {
-    const result = propertyManagement.updateProperty('999', { title: 'Updated Property' });
-    expect(result).toBe('Property not found');
+  test('should return "Property not found" when updating non-existent property', () => {
+    const updatedDetails = { price: 2000 };
+    expect(updateProperty.call({ properties }, '999', updatedDetails)).toBe(
+      'Property not found'
+    );
   });
 
-  test('should delete a property successfully', () => {
+  test('should delete a property by ID', () => {
     const property = {
       propertyID: '1',
-      title: 'Test Property',
-      description: 'A beautiful property',
-      owner: 'John Doe',
-      location: '123 Main St',
-      price: 100000,
-      status: 'available',
-      dateListed: '2023-01-01',
-      images: ['image1.jpg']
+      title: 'Property1',
+      description: 'Description1',
+      owner: 'Owner1',
+      location: 'Location1',
+      price: 1000,
+      status: 'Available',
+      dateListed: '2025-03-11',
+      images: ['image1.jpg'],
     };
-    propertyManagement.addProperty(property);
-    propertyManagement.deleteProperty('1');
-    expect(propertyManagement.properties.length).toBe(0);
+    addProperty.call({ properties }, property);
+    deleteProperty.call({ properties }, '1');
+    expect(properties).not.toContain(property);
   });
 
-  test('should return "Property not found" if trying to delete a non-existent property', () => {
-    const result = propertyManagement.deleteProperty('999');
-    expect(result).toBe('Property not found');
+  test('should return "Property not found" when deleting non-existent property', () => {
+    expect(deleteProperty.call({ properties }, '999')).toBe('Property not found');
   });
 });
